@@ -63,7 +63,7 @@ function asksID(){
 
 function asksUnit(productID){
 
-	//Asks the customer how many
+	//Asks the customer how many units
 	inquirer.prompt([
 
 		{
@@ -80,12 +80,13 @@ function asksUnit(productID){
 
 	]).then(unit => {
 
-			calculatesOrder(productID, unit.unit)
+			//Excutes function
+			calculatesOrder(productID, unit.unit);
+
 		});
 };
 
-
-
+//Determines if the product is still in stock. If it is, calculates price.
 function calculatesOrder(productID, unit){
 
 	var query = connect.query("SELECT * FROM products WHERE item_id =?", [productID], function(err, res) {
@@ -105,7 +106,9 @@ function calculatesOrder(productID, unit){
 	    });
 };
 
+//Updates the quantity of the current product in the table
 function updateTable(productID, newUnit){
+	
 		var query = connect.query(
         "UPDATE products SET ? WHERE ?",
         [
@@ -119,7 +122,7 @@ function updateTable(productID, newUnit){
 		function(err, res) {
 	    if(err) throw err;
 
-	    	console.log("Store updated")
+	    	console.log("Store updated");
 	
 	    });
 }
