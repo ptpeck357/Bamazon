@@ -83,8 +83,8 @@ var Customer = function(){
 			    } 
 
 			    //Validating that the store has enough in stock for the customer
-			    if((res[0].stock_quantity - parseInt(unit)) < 0){
-			    	console.log(chalk.red("Sorry, we do not currently have that amount in stock. Please enter a different amount."));
+			    else if((res[0].stock_quantity - parseInt(unit)) < 0){
+			    	console.log(chalk.red("Sorry, we do not currently have that amount in stock that you asked for. Please enter a different amount."));
 			    	whatItem();
 			    } else {
 			    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
@@ -111,8 +111,24 @@ var Customer = function(){
 			function(err, res) {
 		    if(err) throw err;
 		    	console.log(chalk.cyanBright("\nStore updated!"));
+
+		    	//Asks the customer if they want to continue shopping
+		    	inquirer.prompt([
+			    	{
+			    		type: 'confirm',
+			    		name: 'continue',
+			    		message: 'Do you want to continue shopping?'
+			    	}
+		    	]).then(result =>{
+		    		if(result.continue){
+		    			whatItem();
+		    		} else {
+		    			console.log(chalk.green("Thanks for shopping with us!"));
+		    			connect.end();
+		    		};
+		    	})
+
 		    });
-		    connect.end() 
 	};
 };
 

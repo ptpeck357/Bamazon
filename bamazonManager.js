@@ -239,6 +239,22 @@ var Manager = function(){
 					
 			    });
 			});
+
+			//Asks the manager if he wants to continue looking over the store
+			inquirer.prompt([
+		    	{
+		    		type: 'confirm',
+		    		name: 'continue',
+		    		message: 'Do you want to continue going over the store?'
+		    	}
+	    	]).then(result =>{
+	    		if(result.continue){
+	    			options();
+	    		} else {
+	    			console.log(chalk.green("Nice seeing you! See you another day!"));
+	    			connect.end();
+	    		};
+	    	})
 	};
 };
 
