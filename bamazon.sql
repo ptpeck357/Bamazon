@@ -13,7 +13,4 @@ CREATE TABLE products (
   PRIMARY KEY(item_id)
   );
 
-INSERT INTO products (item_id, product_name, department_name, price, stock_quantity)
-VALUES ("400", "The Hobbit", "Books", "15", "0");
-
 SELECT * FROM products;

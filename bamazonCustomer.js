@@ -1,7 +1,7 @@
 //Customer View of Bamazon
 
 var Customer = function(){
-
+	var Table = require('easy-table')
 	this.mysql = require('mysql');
 	var inquirer = require('inquirer');
 	const chalk = require('chalk');
@@ -24,10 +24,18 @@ var Customer = function(){
 		var query = connect.query("SELECT * FROM products", function(err, res) {
 		    if(err) throw err;
 
-		    for(var i = 0; i < res.length; i++) {
-		        console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + "$" + res[i].price 
-		        + " | " + res[i].stock_quantity + "\n")
-		    };
+		    var t = new Table;
+		    res.forEach(function(product) {
+			  t.cell('Product Id', product.item_id)
+			  t.cell('Name', product.product_name)
+			  t.cell('Category', product.department_name)
+			  t.cell('Price, USD', product.price)
+			  t.cell('Quantity', product.stock_quantity, Table.number(2))
+			  t.newRow()
+
+			});
+
+		    console.log(t.toString());
 
 		    //Excutes next function
 		    whatItem();
@@ -123,7 +131,7 @@ var Customer = function(){
 		    		if(result.continue){
 		    			whatItem();
 		    		} else {
-		    			console.log(chalk.green("Thanks for shopping with us!"));
+		    			console.log(chalk.green("\nThanks for shopping with us!"));
 		    			connect.end();
 		    		};
 		    	})

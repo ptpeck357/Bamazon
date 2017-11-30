@@ -1,7 +1,7 @@
 //Manager View of Bamazon
 
 var Manager = function(){
-
+	var Table = require('easy-table');
 	this.mysql = require('mysql');
 	var inquirer = require('inquirer');
 	const chalk = require('chalk');
@@ -62,12 +62,18 @@ var Manager = function(){
 		var query = connect.query("SELECT * FROM products", function(err, res) {
 		    if(err) throw err;
 
-		    console.log("\n");
+		    var t = new Table;
+		    res.forEach(function(product) {
+			  t.cell('Product Id', product.item_id)
+			  t.cell('Name', product.product_name)
+			  t.cell('Category', product.department_name)
+			  t.cell('Price, USD', product.price)
+			  t.cell('Quantity', product.stock_quantity, Table.number(2))
+			  t.newRow()
+			})
+
+		    console.log(t.toString());
 		    
-		    for(var i = 0; i < res.length; i++) {
-		        console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + "$" + res[i].price 
-		        + " | " + res[i].stock_quantity + "\n")
-		    };
 		});
 
 		options();
@@ -79,14 +85,21 @@ var Manager = function(){
 		var query = connect.query("SELECT * FROM products", function(err, res) {
 		    if(err) throw err;
 
-		    console.log("\n");
+	        if(res[i].stock_quantity < 5){
+	        	var t = new Table;
+			    res.forEach(function(product) {
+				  t.cell('Product Id', product.item_id)
+				  t.cell('Name', product.product_name)
+				  t.cell('Category', product.department_name)
+				  t.cell('Price, USD', product.price)
+				  t.cell('Quantity', product.stock_quantity, Table.number(2))
+				  t.newRow()
+				})
 
-		    for(var i = 0; i < res.length; i++) {
-		        if(res[i].stock_quantity < 5){
-		        	console.log("\n" + res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + 
-		        	" | " + "$" + res[i].price + " | " + res[i].stock_quantity + "\n")
-		        };
-		    };
+			    console.log(t.toString());
+
+	        };
+		    
 		});
 		options();
 	};
@@ -235,26 +248,25 @@ var Manager = function(){
 					        " | " + "$" + res[i].price + " | " + res[i].stock_quantity + "\n")
 					    };
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
+
+					    //Asks the manager if he wants to continue looking over the store
+						inquirer.prompt([
+					    	{
+					    		type: 'confirm',
+					    		name: 'continue',
+					    		message: 'Do you want to continue going over the store?'
+					    	}
+				    	]).then(result =>{
+				    		if(result.continue){
+				    			options();
+				    		} else {
+				    			console.log(chalk.green("Nice seeing you! See you another day!"));
+				    			connect.end();
+				    		};
+				    	})
 					});
-					
 			    });
 			});
-
-			//Asks the manager if he wants to continue looking over the store
-			inquirer.prompt([
-		    	{
-		    		type: 'confirm',
-		    		name: 'continue',
-		    		message: 'Do you want to continue going over the store?'
-		    	}
-	    	]).then(result =>{
-	    		if(result.continue){
-	    			options();
-	    		} else {
-	    			console.log(chalk.green("Nice seeing you! See you another day!"));
-	    			connect.end();
-	    		};
-	    	})
 	};
 };
 
