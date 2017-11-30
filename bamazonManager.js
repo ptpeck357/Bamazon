@@ -117,47 +117,33 @@ var Manager = function(){
 		          }
 		          return false;
 		        }
-		    }
+		    }, 
 
-		]).then(productID => {
+		    {
+				type: 'input',
+				name: 'amount',
+				message: 'How many units are you adding to the product?',
+				validate: function(value) {
+		          if (isNaN(value) === false) {
+		            return true;
+		          }
+		          return false;
+		        }
+			}
 
-				amount(productID.id)
+		]).then(result => {
+
+				var query = connect.query("SELECT * FROM products WHERE item_id =?", result.id, function(err, res) {
+				    if(err) throw err;
+
+				    var newUnit = res[0].stock_quantity + parseInt(result.amount);
+
+					addInventory(result.id, newUnit);
+
+				});
 
 			});
 	};
-
-
-
-	function amount(productID){
-
-		inquirer.prompt([
-					{
-						type: 'input',
-						name: 'amount',
-						message: 'How many units are you adding to the product?',
-						validate: function(value) {
-				          if (isNaN(value) === false) {
-				            return true;
-				          }
-				          return false;
-				        }
-					}
-				]).then(amount => {
-
-					var query = connect.query("SELECT * FROM products WHERE item_id =?", productID, function(err, res) {
-					    if(err) throw err;
-
-					    var newUnit = res[0].stock_quantity + parseInt(amount.amount);
-
-						    addInventory(productID, newUnit);
-
-					    });
-
-					
-
-				})
-	};
-
 
 
 	function addInventory(productID, amount){
@@ -175,16 +161,102 @@ var Manager = function(){
 			function(err, res) {
 		    if(err) throw err;
 
-		    	console.log("\nStore updated");
+		    	console.log(chalk.cyanBright("\nStore updated\n"));
 				
 				options();
 		    });
 	};
 
 
-
+	//Asks the manager what item they are adding
 	function addProduct(){
 
+		inquirer.prompt([
+
+			{
+				type: 'input',
+				name: 'id',
+				message: "What is the new product ID of the item you are adding?",
+				validate: function(value) {
+			      if (isNaN(value) === false) {
+			        return true;
+			      }
+			      return false;
+			    }
+			},
+
+			{
+				type: 'input',
+				name: 'name',
+				message: "What is the name of the new item?"
+			},
+
+			{
+				type: 'input',
+				name: 'category',
+				message: "What category does this new item belong too?"
+			
+			},
+
+
+			{
+				type: 'input',
+				name: 'price',
+				message: "What is the price of the new item?",
+				validate: function(value) {
+			      if (isNaN(value) === false) {
+			        return true;
+			      }
+			      return false;
+			    }
+			},
+
+			{
+				type: 'input',
+				name: 'unit',
+				message: "What is the quantity of the new item?",
+				validate: function(value) {
+			      if (isNaN(value) === false) {
+			        return true;
+			      }
+			      return false;
+			    }
+			}
+
+			]).then(result => {
+
+				var query = connect.query(
+		        "INSERT INTO products SET ?",
+		        {
+		        	item_id: result.id,
+					product_name: result.name,
+					department_name: result.category,
+					price: result.price,
+					stock_quantity: result.unit
+		        },
+				function(err, res) {
+					
+			    if(err) throw err;
+
+			    	//Shows the manager all the products with their info
+					var query = connect.query("SELECT * FROM products", function(err, res) {
+					    if(err) throw err;
+
+					    console.log("\n");
+					    
+					    for(var i = 0; i < res.length; i++) {
+					        console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + 
+					        " | " + "$" + res[i].price + " | " + res[i].stock_quantity + "\n")
+					    };
+
+					    console.log(chalk.cyanBright("\nStore updated!\n"));
+					});
+					
+			    });
+
+
+
+			});
 	};
 };
 

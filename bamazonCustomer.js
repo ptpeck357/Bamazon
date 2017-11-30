@@ -33,12 +33,12 @@ var Customer = function(){
 		    };
 
 		    //Excutes next function
-		    asksID();
+		    whatItem();
 		});
 	});
 
 
-	function asksID(){
+	function whatItem(){
 
 		// Asks the customer what item ID they want to buy
 		inquirer.prompt([
@@ -53,22 +53,9 @@ var Customer = function(){
 		          }
 		          return false;
 		        }
-		    }
+		    },
 
-		]).then(productID => {
-
-				asksUnit(productID.id)
-
-			});
-
-	};
-
-	function asksUnit(productID){
-
-		//Asks the customer how many units
-		inquirer.prompt([
-
-			{
+		    {
 				type: 'input',
 				name: 'unit',
 				message: "How many units do you want to buy?",
@@ -80,13 +67,14 @@ var Customer = function(){
 		        }
 		    }
 
-		]).then(unit => {
+		]).then(result => {
 
-				//Excutes function
-				calculatesOrder(productID, unit.unit);
+				calculatesOrder(result.id, result.unit);
 
 			});
+
 	};
+
 
 	//Determines if the product is still in stock. If it is, calculates price.
 	function calculatesOrder(productID, unit){
@@ -96,7 +84,7 @@ var Customer = function(){
 
 			    if(res[0].stock_quantity === 0){
 			    	console.log(chalk.red("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
-			    	asksID();
+					whatItem();
 			    } else{
 			    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
 
@@ -124,7 +112,7 @@ var Customer = function(){
 			function(err, res) {
 		    if(err) throw err;
 
-		    	console.log("\nStore updated!");
+		    	console.log(chalk.cyanBright("\nStore updated!"));
 		
 		    });
 
