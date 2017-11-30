@@ -3,11 +3,8 @@
 var Customer = function(){
 
 	this.mysql = require('mysql');
-
 	var inquirer = require('inquirer');
-
 	const chalk = require('chalk');
-
 	this.MYSQLPW = process.env.MYSQL_PW;
 
 	var connect = this.mysql.createConnection({
@@ -68,9 +65,7 @@ var Customer = function(){
 		    }
 
 		]).then(result => {
-
 				calculatesOrder(result.id, result.unit);
-
 			});
 
 	};
@@ -85,11 +80,15 @@ var Customer = function(){
 			    if(res[0].stock_quantity === 0){
 			    	console.log(chalk.red("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
 					whatItem();
-			    } else{
+			    } 
+
+			    //Validating that the store has enough in stock for the customer
+			    if((res[0].stock_quantity - parseInt(unit)) < 0){
+			    	console.log(chalk.red("Sorry, we do not currently have that amount in stock. Please enter a different amount."));
+			    	whatItem();
+			    } else {
 			    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
-
 			    	var newUnit = res[0].stock_quantity - parseInt(unit);
-
 			    	updateTable(productID, newUnit);
 			    };
 
@@ -111,11 +110,8 @@ var Customer = function(){
 	        ],
 			function(err, res) {
 		    if(err) throw err;
-
 		    	console.log(chalk.cyanBright("\nStore updated!"));
-		
 		    });
-
 		    connect.end() 
 	};
 };

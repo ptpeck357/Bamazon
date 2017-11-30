@@ -1,12 +1,10 @@
 //Manager View of Bamazon
 
 var Manager = function(){
+
 	this.mysql = require('mysql');
-
 	var inquirer = require('inquirer');
-
 	const chalk = require('chalk');
-
 	this.MYSQLPW = process.env.MYSQL_PW;
 
 	var connect = this.mysql.createConnection({
@@ -21,10 +19,8 @@ var Manager = function(){
 			console.error('error connecting: ' + err.stack);
 		return;
 		}
-
 		options();
 	});
-
 
 	function options() {
 	  inquirer
@@ -60,8 +56,6 @@ var Manager = function(){
 	    });
 	};
 
-
-
 	function viewProducts(){
 
 		//Shows the manager all the products with their info
@@ -79,8 +73,6 @@ var Manager = function(){
 		options();
 	};
 
-
-
 	//View items with an inventory count lower than five.
 	function viewInventory(){
 
@@ -96,11 +88,8 @@ var Manager = function(){
 		        };
 		    };
 		});
-
 		options();
 	};
-
-
 
 	function whatItem(){
 
@@ -145,7 +134,6 @@ var Manager = function(){
 			});
 	};
 
-
 	function addInventory(productID, amount){
 
 		var query = connect.query(
@@ -166,7 +154,6 @@ var Manager = function(){
 				options();
 		    });
 	};
-
 
 	//Asks the manager what item they are adding
 	function addProduct(){
@@ -197,7 +184,6 @@ var Manager = function(){
 				message: "What category does this new item belong too?"
 			
 			},
-
 
 			{
 				type: 'input',
@@ -235,7 +221,7 @@ var Manager = function(){
 					stock_quantity: result.unit
 		        },
 				function(err, res) {
-					
+
 			    if(err) throw err;
 
 			    	//Shows the manager all the products with their info
@@ -248,14 +234,10 @@ var Manager = function(){
 					        console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + 
 					        " | " + "$" + res[i].price + " | " + res[i].stock_quantity + "\n")
 					    };
-
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
 					});
 					
 			    });
-
-
-
 			});
 	};
 };
