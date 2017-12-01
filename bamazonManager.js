@@ -60,48 +60,46 @@ var Manager = function(){
 
 		//Shows the manager all the products with their info
 		var query = connect.query("SELECT * FROM products", function(err, res) {
+			
 		    if(err) throw err;
 		    console.log("\n");
 		    var t = new Table;
 		    res.forEach(function(product) {
-			  t.cell('Product Id', product.item_id)
-			  t.cell('Name', product.product_name)
-			  t.cell('Category', product.department_name)
-			  t.cell('Price, USD', product.price, Table.number(2))
-			  t.cell('Quantity', product.stock_quantity)
+			  t.cell('Product Id', product.item_id);
+			  t.cell('Name', product.product_name);
+			  t.cell('Category', product.department_name);
+			  t.cell('Price (USD)', product.price, Table.number(2));
+			  t.cell('Quantity', product.stock_quantity);
 			  t.newRow()
 			})
 
 		    console.log(t.toString());
 
+		    options();
 		});
-
-		options();
 	};
 
 	//View items with an inventory count lower than five.
 	function viewInventory(){
 
-		var query = connect.query("SELECT * FROM products", function(err, res) {
+		var query = connect.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
 		    if(err) throw err;
 
-	        if(res[i].stock_quantity < 5){
-	        	var t = new Table;
-	        	console.log("\n")
-			    res.forEach(function(product) {
-				  t.cell('Product Id', product.item_id);
-				  t.cell('Name', product.product_name);
-				  t.cell('Category', product.department_name);
-				  t.cell('Price, USD', product.price, Table.number(2));
-				  t.cell('Quantity', product.stock_quantity);
-				  t.cell('revenue', product.product_sales);
-				  t.newRow();
-				})
+        	console.log("\n")
+        	var t = new Table;
 
-			    console.log(t.toString());
-			    options();
-	        };
-		    
+		    res.forEach(function(product) {
+			  t.cell('Product Id', product.item_id);
+			  t.cell('Name', product.product_name);
+			  t.cell('Category', product.department_name);
+			  t.cell('Price (USD)', product.price, Table.number(2));
+			  t.cell('Quantity', product.stock_quantity);
+			  t.newRow();
+			})
+
+		    console.log(t.toString());
+
+		    options();
 		});
 		
 	};
@@ -243,12 +241,19 @@ var Manager = function(){
 					var query = connect.query("SELECT * FROM products", function(err, res) {
 					    if(err) throw err;
 
-					    console.log("\n");
-					    
-					    for(var i = 0; i < res.length; i++) {
-					        console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + 
-					        " | " + "$" + res[i].price + " | " + res[i].stock_quantity + "\n")
-					    };
+					    var t = new Table;
+			        	console.log("\n")
+					    res.forEach(function(product) {
+						  t.cell('Product Id', product.item_id);
+						  t.cell('Name', product.product_name);
+						  t.cell('Category', product.department_name);
+						  t.cell('Price (USD)', product.price, Table.number(2));
+						  t.cell('Quantity', product.stock_quantity);
+						  t.newRow();
+						})
+
+			   			console.log(t.toString());
+
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
 
 					    //Asks the manager if he wants to continue looking over the store
