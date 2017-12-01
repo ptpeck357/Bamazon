@@ -4,6 +4,8 @@ var bamazonCustomer = require('./bamazonCustomer.js');
 
 var bamazonManager = require('./bamazonManager.js');
 
+var bamazonSupervisor = require('./bamazonSupervisor.js')
+
 inquirer.prompt({
 	name: "action",
 	type: "list",
@@ -23,6 +25,7 @@ inquirer.prompt({
 		var managerUser = new bamazonManager;
 		break;
 		case "Supervisor":
+		var supervisorUser = new bamazonSupervisor;
 		break;
 	}
 });

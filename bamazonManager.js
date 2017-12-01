@@ -13,7 +13,6 @@ var Manager = function(){
 		password: this.MYSQLPW,
 		database: 'bamazon'
 	});
-	 
 	connect.connect(function(err) {
 		if (err) {
 			console.error('error connecting: ' + err.stack);
@@ -57,10 +56,8 @@ var Manager = function(){
 	};
 
 	function viewProducts(){
-
 		//Shows the manager all the products with their info
 		var query = connect.query("SELECT * FROM products", function(err, res) {
-			
 		    if(err) throw err;
 		    console.log("\n");
 		    var t = new Table;
@@ -72,22 +69,17 @@ var Manager = function(){
 			  t.cell('Quantity', product.stock_quantity);
 			  t.newRow()
 			})
-
 		    console.log(t.toString());
-
 		    options();
 		});
 	};
 
 	//View items with an inventory count lower than five.
 	function viewInventory(){
-
 		var query = connect.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
 		    if(err) throw err;
-
         	console.log("\n")
         	var t = new Table;
-
 		    res.forEach(function(product) {
 			  t.cell('Product Id', product.item_id);
 			  t.cell('Name', product.product_name);
@@ -96,19 +88,15 @@ var Manager = function(){
 			  t.cell('Quantity', product.stock_quantity);
 			  t.newRow();
 			})
-
-		    console.log(t.toString());
-
+			console.log(chalk.green("There are no low inventory!"));
 		    options();
 		});
 		
 	};
 
 	function whatItem(){
-
 		// Asks the manager what item ID they want to add too
 		inquirer.prompt([
-
 			{
 				type: 'input',
 				name: 'id',
@@ -120,7 +108,6 @@ var Manager = function(){
 		          return false;
 		        }
 		    }, 
-
 		    {
 				type: 'input',
 				name: 'amount',
@@ -132,18 +119,12 @@ var Manager = function(){
 		          return false;
 		        }
 			}
-
 		]).then(result => {
-
 				var query = connect.query("SELECT * FROM products WHERE item_id =?", result.id, function(err, res) {
 				    if(err) throw err;
-
 				    var newUnit = res[0].stock_quantity + parseInt(result.amount);
-
 					addInventory(result.id, newUnit);
-
 				});
-
 			});
 	};
 
@@ -161,18 +142,14 @@ var Manager = function(){
 	        ],
 			function(err, res) {
 		    if(err) throw err;
-
 		    	console.log(chalk.cyanBright("\nStore updated\n"));
-				
 				options();
 		    });
 	};
 
 	//Asks the manager what item they are adding
 	function addProduct(){
-
 		inquirer.prompt([
-
 			{
 				type: 'input',
 				name: 'id',
@@ -184,20 +161,17 @@ var Manager = function(){
 			      return false;
 			    }
 			},
-
 			{
 				type: 'input',
 				name: 'name',
 				message: "What is the name of the new item?"
 			},
-
 			{
 				type: 'input',
 				name: 'category',
 				message: "What category does this new item belong too?"
 			
 			},
-
 			{
 				type: 'input',
 				name: 'price',
@@ -221,9 +195,7 @@ var Manager = function(){
 			      return false;
 			    }
 			}
-
 			]).then(result => {
-
 				var query = connect.query(
 		        "INSERT INTO products SET ?",
 		        {
@@ -234,13 +206,10 @@ var Manager = function(){
 					stock_quantity: result.unit
 		        },
 				function(err, res) {
-
 			    if(err) throw err;
-
 			    	//Shows the manager all the products with their info
 					var query = connect.query("SELECT * FROM products", function(err, res) {
 					    if(err) throw err;
-
 					    var t = new Table;
 			        	console.log("\n")
 					    res.forEach(function(product) {
@@ -251,11 +220,8 @@ var Manager = function(){
 						  t.cell('Quantity', product.stock_quantity);
 						  t.newRow();
 						})
-
 			   			console.log(t.toString());
-
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
-
 					    //Asks the manager if he wants to continue looking over the store
 						inquirer.prompt([
 					    	{

@@ -13,32 +13,25 @@ var Customer = function(){
 		password: this.MYSQLPW,
 		database: 'bamazon'
 	});
-	 
 	connect.connect(function(err) {
 		if (err) {
 			console.error('error connecting: ' + err.stack);
 		return;
 		}
-
 		//Shows the customer all the products with their info
-		var query = connect.query("SELECT item_id, product_name, price, stock_quantity, product_sales FROM products", function(err, res) {
+		var query = connect.query("SELECT item_id, product_name, price, stock_quantity FROM products", function(err, res) {
 		    if(err) throw err;
 		    console.log("\n")
 		    var t = new Table;
 		    res.forEach(function(product) {
-
 				  t.cell('Product Id', product.item_id);
 				  t.cell('Name', product.product_name);
 				  t.cell('Category', product.department_name);
 				  t.cell('Price (USD)', product.price, Table.number(2));
 				  t.cell('Quantity', product.stock_quantity);
-				  t.cell('revenue', product.product_sales);
 				  t.newRow();
-
 			});
-
 		    console.log(t.toString());
-
 		    //Excutes next function
 		    whatItem();
 		});
@@ -46,10 +39,8 @@ var Customer = function(){
 
 
 	function whatItem(){
-
 		// Asks the customer what item ID they want to buy
 		inquirer.prompt([
-
 			{
 				type: 'input',
 				name: 'id',
@@ -61,7 +52,6 @@ var Customer = function(){
 		          return false;
 		        }
 		    },
-
 		    {
 				type: 'input',
 				name: 'unit',
@@ -73,45 +63,38 @@ var Customer = function(){
 		          return false;
 		        }
 		    }
-
 		]).then(result => {
 
 				//Calcuates the order that the customer bought
 				calculatesOrder(result.id, result.unit);
 			});
-
 	};
 
 
 	//Determines if the product is still in stock. If it is, calculates price.
 	function calculatesOrder(productID, unit){
-
 		var query = connect.query("SELECT * FROM products WHERE item_id =?", [productID], function(err, res) {
 		    if(err) throw err;
+		    if(res[0].stock_quantity === 0){
+		    	console.log(chalk.red("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
+				whatItem();
+		    } 
+		    //Validating that the store has enough in stock for the customer
+		    else if((res[0].stock_quantity - parseInt(unit)) < 0){
+		    	console.log(chalk.red("Sorry, we do not currently have that amount in stock that you asked for. Please enter a different amount."));
+		    	whatItem();
+		    } else {
+		    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
 
-			    if(res[0].stock_quantity === 0){
-			    	console.log(chalk.red("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
-					whatItem();
-			    } 
+		    	var newUnit = res[0].stock_quantity - parseInt(unit);
 
-			    //Validating that the store has enough in stock for the customer
-			    else if((res[0].stock_quantity - parseInt(unit)) < 0){
-			    	console.log(chalk.red("Sorry, we do not currently have that amount in stock that you asked for. Please enter a different amount."));
-			    	whatItem();
-			    } else {
-			    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
+		    	var revenue = res[0].product_sales + (parseInt(unit) * res[0].price);
 
-			    	var newUnit = res[0].stock_quantity - parseInt(unit);
-
-			    	var revenue = res[0].product_sales + (parseInt(unit) * res[0].price);
-
-			    	//Function that adds the customer's money to the product_sales column
-			    	addRevenue(productID, newUnit, revenue);
-			    };
-
-		    });
+		    	//Function that adds the customer's money to the product_sales column
+		    	addRevenue(productID, newUnit, revenue);
+		    };
+		});
 	};
-
 	//Adds the customer's money to the table
 	function addRevenue(productID, newUnit, revenue){
 		var query = connect.query(
@@ -125,18 +108,14 @@ var Customer = function(){
 	            }
 	        ],
 	        function(err, res) {
-
 		    if(err) throw err;
-		    
 		    	//Function that subtracts the number of units that the customer bought
 			    updateTable(productID, newUnit);
 		    });
 	};
 
-
 	//Updates the quantity of the current product in the table
 	function updateTable(productID, newUnit){
-		
 			var query = connect.query(
 	        "UPDATE products SET ? WHERE ?",
 	        [
@@ -165,7 +144,6 @@ var Customer = function(){
 		    			connect.end();
 		    		};
 		    	})
-
 		    });
 	};
 };
