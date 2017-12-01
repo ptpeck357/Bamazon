@@ -21,17 +21,19 @@ var Customer = function(){
 		}
 
 		//Shows the customer all the products with their info
-		var query = connect.query("SELECT * FROM products", function(err, res) {
+		var query = connect.query("SELECT item_id, product_name, price, stock_quantity, product_sales FROM products", function(err, res) {
 		    if(err) throw err;
-
+		    console.log("\n")
 		    var t = new Table;
 		    res.forEach(function(product) {
-			  t.cell('Product Id', product.item_id)
-			  t.cell('Name', product.product_name)
-			  t.cell('Category', product.department_name)
-			  t.cell('Price, USD', product.price)
-			  t.cell('Quantity', product.stock_quantity, Table.number(2))
-			  t.newRow()
+
+				  t.cell('Product Id', product.item_id);
+				  t.cell('Name', product.product_name);
+				  t.cell('Category', product.department_name);
+				  t.cell('Price (USD)', product.price, Table.number(2));
+				  t.cell('Quantity', product.stock_quantity);
+				  t.cell('revenue', product.product_sales);
+				  t.newRow();
 
 			});
 
@@ -73,6 +75,8 @@ var Customer = function(){
 		    }
 
 		]).then(result => {
+
+				//Calcuates the order that the customer bought
 				calculatesOrder(result.id, result.unit);
 			});
 
@@ -96,12 +100,39 @@ var Customer = function(){
 			    	whatItem();
 			    } else {
 			    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
+
 			    	var newUnit = res[0].stock_quantity - parseInt(unit);
-			    	updateTable(productID, newUnit);
+
+			    	var revenue = res[0].product_sales + (parseInt(unit) * res[0].price);
+
+			    	//Function that adds the customer's money to the product_sales column
+			    	addRevenue(productID, newUnit, revenue);
 			    };
 
 		    });
 	};
+
+	//Adds the customer's money to the table
+	function addRevenue(productID, newUnit, revenue){
+		var query = connect.query(
+	        "UPDATE products SET ? WHERE ?",
+	        [
+	            {
+	                product_sales: revenue
+	            },
+	            {
+	                item_id: productID
+	            }
+	        ],
+	        function(err, res) {
+
+		    if(err) throw err;
+		    
+		    	//Function that subtracts the number of units that the customer bought
+			    updateTable(productID, newUnit);
+		    });
+	};
+
 
 	//Updates the quantity of the current product in the table
 	function updateTable(productID, newUnit){
@@ -119,7 +150,6 @@ var Customer = function(){
 			function(err, res) {
 		    if(err) throw err;
 		    	console.log(chalk.cyanBright("\nStore updated!"));
-
 		    	//Asks the customer if they want to continue shopping
 		    	inquirer.prompt([
 			    	{

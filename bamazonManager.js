@@ -61,19 +61,19 @@ var Manager = function(){
 		//Shows the manager all the products with their info
 		var query = connect.query("SELECT * FROM products", function(err, res) {
 		    if(err) throw err;
-
+		    console.log("\n");
 		    var t = new Table;
 		    res.forEach(function(product) {
 			  t.cell('Product Id', product.item_id)
 			  t.cell('Name', product.product_name)
 			  t.cell('Category', product.department_name)
-			  t.cell('Price, USD', product.price)
-			  t.cell('Quantity', product.stock_quantity, Table.number(2))
+			  t.cell('Price, USD', product.price, Table.number(2))
+			  t.cell('Quantity', product.stock_quantity)
 			  t.newRow()
 			})
 
 		    console.log(t.toString());
-		    
+
 		});
 
 		options();
@@ -87,21 +87,23 @@ var Manager = function(){
 
 	        if(res[i].stock_quantity < 5){
 	        	var t = new Table;
+	        	console.log("\n")
 			    res.forEach(function(product) {
-				  t.cell('Product Id', product.item_id)
-				  t.cell('Name', product.product_name)
-				  t.cell('Category', product.department_name)
-				  t.cell('Price, USD', product.price)
-				  t.cell('Quantity', product.stock_quantity, Table.number(2))
-				  t.newRow()
+				  t.cell('Product Id', product.item_id);
+				  t.cell('Name', product.product_name);
+				  t.cell('Category', product.department_name);
+				  t.cell('Price, USD', product.price, Table.number(2));
+				  t.cell('Quantity', product.stock_quantity);
+				  t.cell('revenue', product.product_sales);
+				  t.newRow();
 				})
 
 			    console.log(t.toString());
-
+			    options();
 	        };
 		    
 		});
-		options();
+		
 	};
 
 	function whatItem(){
