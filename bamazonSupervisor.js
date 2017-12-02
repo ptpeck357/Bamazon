@@ -20,6 +20,8 @@ var Supervisor = function(){
 		menuSection();
 	});
 
+
+	//Asks what they want to do
 	function menuSection(){
 		inquirer.prompt({
 			name: "action",
@@ -28,55 +30,96 @@ var Supervisor = function(){
 			choices: 
 				[
 					"View Product Sales by Department",
-					"Create New Department"
+					"Create New Department",
+					"Exit"
 				]
 		}).then(function(answer) {
 		      switch (answer.action) {
 		        case "View Product Sales by Department":
-				// viewProducts();
-				break;
+					viewExistingdeparments();
+					break;
 
 				case "Create New Department":
-				createDepartment();
-				break;
+					createDepartment();
+					break;
+
+				case "Exit":
+					exit();
+					break;
 		      }
 	    });
 	}
 
 
+	//Views the existing departments. 
+	function viewExistingdeparments(){
 
-	function viewProducts(){
+		var query = "SELECT department_name FROM departments GROUP BY department_name";
+
+			connect.query(query, function(err, res) {
+				//Array to hold the existing departments
+				var object = [];
+
+				for (var i = 0; i < res.length; i++) {
+					object[i] = res[i].department_name 
+				};
+				grabData(object);
+			});
+	};
+
+
+	//
+	function grabData(departments){
 
 		inquirer.prompt({
 			name: "department",
-			type: "input",
+			type: "list",
+			choices: departments,
 			message: "What department would you like to look at?"
 		}).then(function(answer) {
-			
-			var query = "SELECT top_albums.year, top_albums.album, top_albums.position, top5000.song, top5000.artist ";
-			query += "FROM top_albums INNER JOIN top5000 ON (top_albums.artist = top5000.artist AND top_albums.year ";
-			query += "= top5000.year) WHERE (top_albums.artist = ? AND top5000.artist = ?) ORDER BY top_albums.year ";
 
-			connection.query(query, [answer.department], function(err, res) {
-			
+			var query = "SELECT product_sales FROM products WHERE department_name=?";
+
+			connect.query(query, [answer.department], function(err, res) {
+
+					var product_sales = 0;
+
+					for (var i = 0; i < res.length; i++) {
+						product_sales += res[i].product_sales;
+					}		
+					viewDepartments(product_sales, answer.department);
 			});
 		});
 	};
 
 
+	function viewDepartments(productsale, answer){
+		var query = "SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales ";
+		    query += "FROM departments inner JOIN products ON (departments.department_name = products.department_name) ";
+		    query += "WHERE (departments.department_name =? AND products.department_name =?) GROUP BY departments.department_name";
+
+		connect.query(query, [answer, answer], function(err, res) {
+			if(err) throw err;
+			var t = new Table;
+        	var difference = parseInt(productsale) - parseInt(res[0].over_head_costs);
+        	var data = [
+	        	{ id: res[0].department_id, name: res[0].department_name, headcosts: res[0].over_head_costs, product_sales: productsale, profit: difference}
+        	]
+		    data.forEach(function(product) {
+				t.cell('Department Id', product.id);
+				t.cell('Department Name', product.department_name);
+				t.cell('Over Head Costs', product.headcosts);
+				t.cell('Product Sales', product.product_sales);
+				t.cell('Total Profit', product.profit);
+				t.newRow();
+			})
+			console.log(t.toString()); 
+		});
+	};
+
+	//Here, the supervisor can create a new department to look over later
 	function createDepartment(){
 		inquirer.prompt([
-				{
-					type: 'input',
-					name: 'id',
-					message: "What is the new department ID you are adding?",
-					validate: function(value) {
-				      if (isNaN(value) === false) {
-				        return true;
-				      }
-				      return false;
-				    }
-				},
 				{
 					type: 'input',
 					name: 'name',
@@ -97,7 +140,6 @@ var Supervisor = function(){
 					var query = connect.query(
 			        "INSERT INTO departments SET ?",
 			        {
-			        	department_id: result.id,
 						department_name: result.name,
 						over_head_costs: result.amount
 			        },
@@ -106,6 +148,11 @@ var Supervisor = function(){
 				    	menuSection();
 				    });
 				});
+	};
+
+	function exit(){
+		console.log(chalk.green("\nThank you for coming by!"));
+		connect.end();
 	};
 };
 

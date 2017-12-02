@@ -22,35 +22,39 @@ var Manager = function(){
 	});
 
 	function options() {
-	  inquirer
-	    .prompt({
-	      name: "action",
-	      type: "list",
-	      message: "What would you like to do?",
-	      choices: [
+	  inquirer.prompt({
+	        name: "action",
+	    	type: "list",
+	        message: "What would you like to do?",
+	        choices: [
 	        "View Products for Sale",
 			"View Low Inventory",
 			"Add to Inventory",
-			"Add New Product"
+			"Add New Product",
+			"Exit"
 	      ]
 	    })
 	    .then(function(answer) {
 	      switch (answer.action) {
 	        case "View Products for Sale":
-	          viewProducts();
-	          break;
+	            viewProducts();
+	            break;
 
 	        case "View Low Inventory":
-	          viewInventory();
-	          break;
+	            viewInventory();
+	            break;
 
 	        case "Add to Inventory":
-	          whatItem();
-	          break;
+	            whatItem();
+	            break;
 
 	        case "Add New Product":
-	          addProduct();
-	          break;
+	            addProduct();
+	            break;
+
+			case "Exit":
+				exit();
+				break;
 	      }
 	    });
 	};
@@ -62,12 +66,12 @@ var Manager = function(){
 		    console.log("\n");
 		    var t = new Table;
 		    res.forEach(function(product) {
-			  t.cell('Product Id', product.item_id);
-			  t.cell('Name', product.product_name);
-			  t.cell('Category', product.department_name);
-			  t.cell('Price (USD)', product.price, Table.number(2));
-			  t.cell('Quantity', product.stock_quantity);
-			  t.newRow()
+			  	t.cell('Product Id', product.item_id);
+			  	t.cell('Name', product.product_name);
+			  	t.cell('Category', product.department_name);
+			  	t.cell('Price (USD)', product.price, Table.number(2));
+			  	t.cell('Quantity', product.stock_quantity);
+			  	t.newRow()
 			})
 		    console.log(t.toString());
 		    options();
@@ -76,19 +80,19 @@ var Manager = function(){
 
 	//View items with an inventory count lower than five.
 	function viewInventory(){
-		var query = connect.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
+		var query = connect.query("SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function(err, res) {
 		    if(err) throw err;
-        	console.log("\n")
         	var t = new Table;
+        	console.log("\n")
 		    res.forEach(function(product) {
-			  t.cell('Product Id', product.item_id);
-			  t.cell('Name', product.product_name);
-			  t.cell('Category', product.department_name);
-			  t.cell('Price (USD)', product.price, Table.number(2));
-			  t.cell('Quantity', product.stock_quantity);
-			  t.newRow();
+				t.cell('Product Id', product.item_id);
+				t.cell('Name', product.product_name);
+				t.cell('Category', product.department_name);
+				t.cell('Price (USD)', product.price, Table.number(2));
+				t.cell('Quantity', product.stock_quantity);
+				t.newRow();
 			})
-			console.log(chalk.green("There are no low inventory!"));
+			console.log(t.toString());
 		    options();
 		});
 		
@@ -102,10 +106,10 @@ var Manager = function(){
 				name: 'id',
 				message: "What is the product ID of the product you're adding too",
 				validate: function(value) {
-		          if (isNaN(value) === false) {
-		            return true;
-		          }
-		          return false;
+		            if (isNaN(value) === false) {
+		            	return true;
+		            }
+		          		return false;
 		        }
 		    }, 
 		    {
@@ -113,10 +117,10 @@ var Manager = function(){
 				name: 'amount',
 				message: 'How many units are you adding to the product?',
 				validate: function(value) {
-		          if (isNaN(value) === false) {
-		            return true;
-		          }
-		          return false;
+		            if (isNaN(value) === false) {
+		                return true;
+		            }
+		          		return false;
 		        }
 			}
 		]).then(result => {
@@ -155,10 +159,10 @@ var Manager = function(){
 				name: 'id',
 				message: "What is the new product ID of the item you are adding?",
 				validate: function(value) {
-			      if (isNaN(value) === false) {
-			        return true;
-			      }
-			      return false;
+			      	if (isNaN(value) === false) {
+			        	return true;
+			      	}
+			      	return false;
 			    }
 			},
 			{
@@ -177,10 +181,10 @@ var Manager = function(){
 				name: 'price',
 				message: "What is the price of the new item?",
 				validate: function(value) {
-			      if (isNaN(value) === false) {
-			        return true;
-			      }
-			      return false;
+			      	if (isNaN(value) === false) {
+			        	return true;
+			      	}
+			      		return false;
 			    }
 			},
 
@@ -189,10 +193,10 @@ var Manager = function(){
 				name: 'unit',
 				message: "What is the quantity of the new item?",
 				validate: function(value) {
-			      if (isNaN(value) === false) {
-			        return true;
-			      }
-			      return false;
+			      	if (isNaN(value) === false) {
+			        	return true;
+			      	}
+			      	return false;
 			    }
 			}
 			]).then(result => {
@@ -213,34 +217,25 @@ var Manager = function(){
 					    var t = new Table;
 			        	console.log("\n")
 					    res.forEach(function(product) {
-						  t.cell('Product Id', product.item_id);
-						  t.cell('Name', product.product_name);
-						  t.cell('Category', product.department_name);
-						  t.cell('Price (USD)', product.price, Table.number(2));
-						  t.cell('Quantity', product.stock_quantity);
-						  t.newRow();
+						  	t.cell('Product Id', product.item_id);
+							t.cell('Name', product.product_name);
+							t.cell('Category', product.department_name);
+							t.cell('Price (USD)', product.price, Table.number(2));
+							t.cell('Quantity', product.stock_quantity);
+							t.newRow();
 						})
 			   			console.log(t.toString());
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
-					    //Asks the manager if he wants to continue looking over the store
-						inquirer.prompt([
-					    	{
-					    		type: 'confirm',
-					    		name: 'continue',
-					    		message: 'Do you want to continue going over the store?'
-					    	}
-				    	]).then(result =>{
-				    		if(result.continue){
-				    			options();
-				    		} else {
-				    			console.log(chalk.green("Nice seeing you! See you another day!"));
-				    			connect.end();
-				    		};
-				    	})
 					});
 			    });
 			});
 	};
+
+	function exit(){
+		console.log(chalk.green("\nThank you for coming by!"));
+		connect.end();
+	};
+	
 };
 
 module.exports = Manager;

@@ -16,7 +16,7 @@ inquirer.prompt({
 		"Supervisor"
 	]
 })
-.then(function(answer) {
+.then(function(answer) {	
 	switch (answer.action) {
 		case "Customer":
 		var customerUser = new bamazonCustomer;

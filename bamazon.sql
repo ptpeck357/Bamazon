@@ -4,6 +4,8 @@ CREATE database bamazon;
 
 USE bamazon;
 
+Drop TABLE IF EXISTS products;
+
 CREATE TABLE products (
   item_id INT NOT NULL,
   product_name VARCHAR(100) NULL,
@@ -15,5 +17,6 @@ CREATE TABLE products (
   );
   
 SELECT * FROM products;
+
 
 

@@ -24,12 +24,12 @@ var Customer = function(){
 		    console.log("\n")
 		    var t = new Table;
 		    res.forEach(function(product) {
-				  t.cell('Product Id', product.item_id);
-				  t.cell('Name', product.product_name);
-				  t.cell('Category', product.department_name);
-				  t.cell('Price (USD)', product.price, Table.number(2));
-				  t.cell('Quantity', product.stock_quantity);
-				  t.newRow();
+				t.cell('Product Id', product.item_id);
+				t.cell('Name', product.product_name);
+				t.cell('Category', product.department_name);
+				t.cell('Price (USD)', product.price, Table.number(2));
+				t.cell('Quantity', product.stock_quantity);
+				t.newRow();
 			});
 		    console.log(t.toString());
 		    //Excutes next function
@@ -49,7 +49,7 @@ var Customer = function(){
 		          if (isNaN(value) === false) {
 		            return true;
 		          }
-		          return false;
+		         	return false;
 		        }
 		    },
 		    {
@@ -64,7 +64,6 @@ var Customer = function(){
 		        }
 		    }
 		]).then(result => {
-
 				//Calcuates the order that the customer bought
 				calculatesOrder(result.id, result.unit);
 			});
