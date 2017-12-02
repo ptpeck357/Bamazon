@@ -68,9 +68,8 @@ var Supervisor = function(){
 	};
 
 
-	//
+	//Grabbing the total profit of that specific department
 	function grabData(departments){
-
 		inquirer.prompt({
 			name: "department",
 			type: "list",
@@ -84,6 +83,7 @@ var Supervisor = function(){
 
 					var product_sales = 0;
 
+					//Adding the amount from all the items in the same department
 					for (var i = 0; i < res.length; i++) {
 						product_sales += res[i].product_sales;
 					}		
@@ -92,28 +92,31 @@ var Supervisor = function(){
 		});
 	};
 
-
-	function viewDepartments(productsale, answer){
+	//Joining the two tables and displaying the data
+	function viewDepartments(productsale, input){
 		var query = "SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales ";
 		    query += "FROM departments inner JOIN products ON (departments.department_name = products.department_name) ";
 		    query += "WHERE (departments.department_name =? AND products.department_name =?) GROUP BY departments.department_name";
 
-		connect.query(query, [answer, answer], function(err, res) {
+		connect.query(query, [input, input], function(err, res) {
 			if(err) throw err;
 			var t = new Table;
+			//Caluculating the profit
         	var difference = parseInt(productsale) - parseInt(res[0].over_head_costs);
+
         	var data = [
-	        	{ id: res[0].department_id, name: res[0].department_name, headcosts: res[0].over_head_costs, product_sales: productsale, profit: difference}
+	        	{ id: res[0].department_id, name: input, headcosts: res[0].over_head_costs, product_sales: productsale, profit: difference}
         	]
 		    data.forEach(function(product) {
-				t.cell('Department Id', product.id);
-				t.cell('Department Name', product.department_name);
-				t.cell('Over Head Costs', product.headcosts);
-				t.cell('Product Sales', product.product_sales);
-				t.cell('Total Profit', product.profit);
+				t.cell(chalk.green('Department Id'),product.id);
+				t.cell(chalk.green('Department Name'),product.name);
+				t.cell(chalk.green('Over Head Costs'), product.headcosts);
+				t.cell(chalk.green('Product Sales'), product.product_sales);
+				t.cell(chalk.green('Total Profit'), product.profit);
 				t.newRow();
 			})
-			console.log(t.toString()); 
+			console.log("\n" + t.toString()); 
+			menuSection();
 		});
 	};
 

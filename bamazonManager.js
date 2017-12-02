@@ -63,17 +63,16 @@ var Manager = function(){
 		//Shows the manager all the products with their info
 		var query = connect.query("SELECT * FROM products", function(err, res) {
 		    if(err) throw err;
-		    console.log("\n");
 		    var t = new Table;
 		    res.forEach(function(product) {
-			  	t.cell('Product Id', product.item_id);
-			  	t.cell('Name', product.product_name);
-			  	t.cell('Category', product.department_name);
-			  	t.cell('Price (USD)', product.price, Table.number(2));
-			  	t.cell('Quantity', product.stock_quantity);
-			  	t.newRow()
+			  	t.cell(chalk.green('Product Id'), product.item_id);
+				t.cell(chalk.green('Name'),product.product_name);
+				t.cell(chalk.green('Category'), product.department_name);
+				t.cell(chalk.green('Price (USD)'), product.price, Table.number(2));
+				t.cell(chalk.green('Quantity'), product.stock_quantity);
+				t.newRow();
 			})
-		    console.log(t.toString());
+			console.log("\n" + t.toString());
 		    options();
 		});
 	};
@@ -83,16 +82,15 @@ var Manager = function(){
 		var query = connect.query("SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function(err, res) {
 		    if(err) throw err;
         	var t = new Table;
-        	console.log("\n")
 		    res.forEach(function(product) {
-				t.cell('Product Id', product.item_id);
-				t.cell('Name', product.product_name);
-				t.cell('Category', product.department_name);
-				t.cell('Price (USD)', product.price, Table.number(2));
-				t.cell('Quantity', product.stock_quantity);
+				t.cell(chalk.green('Product Id'), product.item_id);
+				t.cell(chalk.green('Name'),product.product_name);
+				t.cell(chalk.green('Category'), product.department_name);
+				t.cell(chalk.green('Price (USD)'), product.price, Table.number(2));
+				t.cell(chalk.green('Quantity'), product.stock_quantity);
 				t.newRow();
 			})
-			console.log(t.toString());
+			console.log("\n" + t.toString());
 		    options();
 		});
 		
@@ -215,16 +213,15 @@ var Manager = function(){
 					var query = connect.query("SELECT * FROM products", function(err, res) {
 					    if(err) throw err;
 					    var t = new Table;
-			        	console.log("\n")
 					    res.forEach(function(product) {
-						  	t.cell('Product Id', product.item_id);
-							t.cell('Name', product.product_name);
-							t.cell('Category', product.department_name);
-							t.cell('Price (USD)', product.price, Table.number(2));
-							t.cell('Quantity', product.stock_quantity);
+						  	t.cell(chalk.green('Product Id'), product.item_id);
+							t.cell(chalk.green('Name'),product.product_name);
+							t.cell(chalk.green('Category'), product.department_name);
+							t.cell(chalk.green('Price (USD)'), product.price, Table.number(2));
+							t.cell(chalk.green('Quantity'), product.stock_quantity);
 							t.newRow();
 						})
-			   			console.log(t.toString());
+			   			console.log("\n" + t.toString());
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
 					});
 			    });
@@ -235,7 +232,7 @@ var Manager = function(){
 		console.log(chalk.green("\nThank you for coming by!"));
 		connect.end();
 	};
-	
+
 };
 
 module.exports = Manager;
