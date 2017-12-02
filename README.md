@@ -9,11 +9,11 @@ Executive. Link to demo is down below.
 From the CLI.file, there are three options given to you to view the store: Customer, Manager and
 Executive.
 
-* <h5>Customer</h5>
+<h5>Customer</h5>
 
 In the customer portion of the app, users are presented with a list of items that they can purchase. After being prompted for the ID of the item they want and the quantity, they are given the order total and the appropriate amount is subtracted from the database. The sale amount is also added to it's respective department's total sales.
 
-* <h5>Manager</h5>
+<h5>Manager</h5>
 
 In the manager app the user is presented with 4 options:
 
@@ -29,7 +29,7 @@ Allows the user to add more inventory to an already existing item.
 * Add New Product
 Allows the user to add a completely new product to the database.
 
-* <h5>Executive</h5>
+<h5>Executive</h5>
 
 In the executive app the user is presented with 2 options:
 
@@ -51,5 +51,5 @@ Allows the user to add a new department to the database after inputting all requ
 	* chalk
 
 #### Demo
-https://www.youtube.com/watch?v=LvyQP9uEfIs&feature=youtu.be - automatic!
+Youtube link for demo: https://www.youtube.com/watch?v=LvyQP9uEfIs&feature=youtu.be 
 
