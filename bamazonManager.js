@@ -144,7 +144,7 @@ var Manager = function(){
 	        ],
 			function(err, res) {
 		    if(err) throw err;
-		    	console.log(chalk.cyanBright("\nStore updated\n"));
+		    	console.log(chalk.cyanBright("\nStore updated\n\n"));
 				options();
 		    });
 	};
@@ -210,7 +210,7 @@ var Manager = function(){
 				function(err, res) {
 			    if(err) throw err;
 			    	//Shows the manager all the products with their info
-					var query = connect.query("SELECT * FROM products", function(err, res) {
+					var query = connect.query("SELECT item_id, product_name, department_name, price, stock_quantity FROM products", function(err, res) {
 					    if(err) throw err;
 					    var t = new Table;
 					    res.forEach(function(product) {
@@ -223,6 +223,7 @@ var Manager = function(){
 						})
 			   			console.log("\n" + t.toString());
 					    console.log(chalk.cyanBright("\nStore updated!\n"));
+					    options();
 					});
 			    });
 			});

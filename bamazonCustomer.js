@@ -19,7 +19,7 @@ var Customer = function(){
 		return;
 		}
 		//Shows the customer all the products with their info
-		var query = connect.query("SELECT item_id, product_name, price, stock_quantity FROM products", function(err, res) {
+		var query = connect.query("SELECT item_id, product_name, department_name, price, stock_quantity FROM products", function(err, res) {
 		    if(err) throw err;
 		    var t = new Table;
 		    res.forEach(function(product) {
@@ -79,7 +79,7 @@ var Customer = function(){
 		    } 
 		    //Validating that the store has enough in stock for the customer
 		    else if((res[0].stock_quantity - parseInt(unit)) < 0){
-		    	console.log(chalk.red("Sorry, we do not currently have that amount in stock that you asked for. Please enter a different amount."));
+		    	console.log(chalk.red("\nSorry, we do not currently have that amount in stock that you asked for. Please enter a different amount.\n"));
 		    	whatItem();
 		    } else {
 		    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
