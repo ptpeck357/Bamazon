@@ -56,6 +56,6 @@ Allows the user to delete an existing department.
 	* chalk
 
 #### Youtube link for demo: 
-[![Image not available](http://img.youtube.com/vi/UGl5-oeRuxg/0.jpg)](https://www.youtube.com/watch?v=9GyWeRElDPk&feature=youtu.be)
+[![Image not available](http://img.youtube.com/vi/9GyWeRElDPk/0.jpg)](https://www.youtube.com/watch?v=9GyWeRElDPk&feature=youtu.be)
 
 
