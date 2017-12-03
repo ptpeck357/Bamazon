@@ -84,7 +84,7 @@ var Manager = function(){
 
 	//View items with an inventory count lower than five.
 	function viewInventory(){
-		var query = connect.query("SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function(err, res) {
+		var query = connect.query("SELECT item_id, product_name, department_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function(err, res) {
 		    if(err) throw err;
         	var t = new Table;
 		    res.forEach(function(product) {

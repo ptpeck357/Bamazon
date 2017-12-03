@@ -161,30 +161,24 @@ var Supervisor = function(){
 				{
 					type: 'input',
 					name: 'delete',
-					message: "What is the department ID that you want to delete?",
-					validate: function(value) {
-				      if (isNaN(value) === false) {
-				        return true;
-				      }
-				      return false;
-				    }
+					message: "What is the department name that you want to delete?",
 				}
 				]).then(result => {
 					var query = connect.query(
 			        "DELETE FROM departments WHERE ?",
 			        {
-						department_id: result.delete
+						department_name: result.delete
 			        },
 					function(err, res) {
 				    if(err) throw err;
-				    	console.log(chalk.cyanBright("\nStore updated\n\n"));
+				    	console.log(chalk.cyanBright("\nStore updated\n"));
 				    	menuSection();
 				    });
 				});
 	}
 
 	function exit(){
-		console.log(chalk.green("\nThank you for coming by!"));
+		console.log(chalk.green("\nThank you for coming by!\n"));
 		connect.end();
 	};
 };

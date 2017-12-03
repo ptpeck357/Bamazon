@@ -72,12 +72,12 @@ var Customer = function(){
 		var query = connect.query("SELECT * FROM products WHERE item_id =?", [productID], function(err, res) {
 		    if(err) throw err;
 		    if(res[0].stock_quantity === 0){
-		    	console.log(chalk.red("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
+		    	console.log(chalk.redBright("\nSorry, this product is currently not in stock. Please look for a different item.\n"));
 				whatItem();
 		    } 
 		    //Validating that the store has enough in stock for the customer
 		    else if((res[0].stock_quantity - parseInt(unit)) < 0){
-		    	console.log(chalk.red("\nSorry, we do not currently have that amount in stock that you asked for. Please enter a different amount.\n"));
+		    	console.log(chalk.redBright("\nSorry, we do not currently have that amount in stock that you asked for. Please enter a different amount.\n"));
 		    	whatItem();
 		    } else {
 		    	console.log(chalk.green("\nYour price is $" + parseInt(unit) * res[0].price));
@@ -124,7 +124,7 @@ var Customer = function(){
 	        ],
 			function(err, res) {
 		    if(err) throw err;
-		    	console.log(chalk.cyanBright("\nStore updated!"));
+		    	console.log(chalk.cyanBright("\nStore updated!\n"));
 		    	//Asks the customer if they want to continue shopping
 		    	inquirer.prompt([
 			    	{
