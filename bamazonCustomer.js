@@ -31,7 +31,6 @@ var Customer = function(){
 				t.newRow();
 			});
 			console.log("\n" + t.toString());
-		    //Excutes next function
 		    whatItem();
 		});
 	});
@@ -50,8 +49,7 @@ var Customer = function(){
 		          }
 		         	return false;
 		        }
-		    },
-		    {
+		    }, {
 				type: 'input',
 				name: 'unit',
 				message: "How many units do you want to buy?",

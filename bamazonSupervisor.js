@@ -31,6 +31,7 @@ var Supervisor = function(){
 				[
 					"View Product Sales by Department",
 					"Create New Department",
+					"Delete a Department",
 					"Exit"
 				]
 		}).then(function(answer) {
@@ -41,6 +42,10 @@ var Supervisor = function(){
 
 				case "Create New Department":
 					createDepartment();
+					break;
+
+				case "Delete a Department":
+					deleteDepartment();
 					break;
 
 				case "Exit":
@@ -77,7 +82,7 @@ var Supervisor = function(){
 			message: "What department would you like to look at?"
 		}).then(function(answer) {
 
-			var query = "SELECT product_sales FROM products WHERE department_name=?";
+			var query = "SELECT product_sales FROM products WHERE department_name =?";
 
 			connect.query(query, [answer.department], function(err, res) {
 
@@ -99,7 +104,6 @@ var Supervisor = function(){
 		    query += "WHERE (departments.department_name =? AND products.department_name =?) GROUP BY departments.department_name";
 
 		connect.query(query, [input, input], function(err, res) {
-			if(err) throw err;
 			var t = new Table;
 			//Caluculating the profit
         	var difference = parseInt(productsale) - parseInt(res[0].over_head_costs);
@@ -127,8 +131,7 @@ var Supervisor = function(){
 					type: 'input',
 					name: 'name',
 					message: "What is the name of the new department?"
-				},
-				{
+				}, {
 					type: 'input',
 					name: 'amount',
 					message: "What is the over head cost of the new department?",
@@ -152,6 +155,33 @@ var Supervisor = function(){
 				    });
 				});
 	};
+
+	function deleteDepartment(){
+		inquirer.prompt([
+				{
+					type: 'input',
+					name: 'delete',
+					message: "What is the department ID that you want to delete?",
+					validate: function(value) {
+				      if (isNaN(value) === false) {
+				        return true;
+				      }
+				      return false;
+				    }
+				}
+				]).then(result => {
+					var query = connect.query(
+			        "DELETE FROM departments WHERE ?",
+			        {
+						department_id: result.delete
+			        },
+					function(err, res) {
+				    if(err) throw err;
+				    	console.log(chalk.cyanBright("\nStore updated\n\n"));
+				    	menuSection();
+				    });
+				});
+	}
 
 	function exit(){
 		console.log(chalk.green("\nThank you for coming by!"));

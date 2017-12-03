@@ -31,6 +31,7 @@ var Manager = function(){
 			"View Low Inventory",
 			"Add to Inventory",
 			"Add New Product",
+			"Delete a Product",
 			"Exit"
 	      ]
 	    })
@@ -50,6 +51,10 @@ var Manager = function(){
 
 	        case "Add New Product":
 	            addProduct();
+	            break;
+
+	        case "Delete a Product":
+	            deleteProduct();
 	            break;
 
 			case "Exit":
@@ -100,7 +105,7 @@ var Manager = function(){
 		// Asks the manager what item ID they want to add too
 		inquirer.prompt([
 			{
-				type: 'input',
+				type: 'input', 
 				name: 'id',
 				message: "What is the product ID of the product you're adding too",
 				validate: function(value) {
@@ -109,8 +114,7 @@ var Manager = function(){
 		            }
 		          		return false;
 		        }
-		    }, 
-		    {
+		    }, {
 				type: 'input',
 				name: 'amount',
 				message: 'How many units are you adding to the product?',
@@ -137,8 +141,7 @@ var Manager = function(){
 	        [
 	            {
 	                stock_quantity: amount
-	            },
-	            {
+	            }, {
 	                item_id: productID
 	            }
 	        ],
@@ -162,19 +165,16 @@ var Manager = function(){
 			      	}
 			      	return false;
 			    }
-			},
-			{
+			}, {
 				type: 'input',
 				name: 'name',
 				message: "What is the name of the new item?"
-			},
-			{
+			}, {
 				type: 'input',
 				name: 'category',
 				message: "What category does this new item belong too?"
 			
-			},
-			{
+			}, {
 				type: 'input',
 				name: 'price',
 				message: "What is the price of the new item?",
@@ -184,9 +184,7 @@ var Manager = function(){
 			      	}
 			      		return false;
 			    }
-			},
-
-			{
+			}, {
 				type: 'input',
 				name: 'unit',
 				message: "What is the quantity of the new item?",
@@ -228,6 +226,33 @@ var Manager = function(){
 			    });
 			});
 	};
+
+	function deleteProduct(){
+		inquirer.prompt([
+				{
+					type: 'input',
+					name: 'delete',
+					message: "What is the product ID that you want delete?",
+					validate: function(value) {
+				      if (isNaN(value) === false) {
+				        return true;
+				      }
+				      return false;
+				    }
+				}
+				]).then(result => {
+					var query = connect.query(
+			        "DELETE FROM products WHERE ?",
+			        {
+						item_id: result.delete
+			        },
+					function(err, res) {
+				    if(err) throw err;
+				    	console.log(chalk.cyanBright("\nStore updated\n\n"));
+				    	options();
+				    });
+				});
+	}
 
 	function exit(){
 		console.log(chalk.green("\nThank you for coming by!"));

@@ -1,21 +1,20 @@
-# Node.js-MySQL
+# Bamazon
 
 ## Description
-This program is an Amazon-like storefront using MySQL and node. The app will take in orders from customers. This app has 3 different functionalities: Customer, Manager and
-Executive. Link to demo is down below.
+Bamazon is an Amazon-like storefront using MySQL and Node.js. This app has 3 different functionalities that are described below: Customer, Manager and Executive. Link to demo is down below.
 
 ## Functionality
 
-From the CLI.file, there are three options given to you to view the store: Customer, Manager and
+Running "CLI.file" in node, three options given to the user what position the user is viewing the store: Customer, Manager and
 Executive.
 
 <h4>Customer</h4>
 
-In the customer portion of the app, users are presented with a list of items that they can purchase. After being prompted for the ID of the item they want and the quantity, they are given the order total and the appropriate amount is subtracted from the database. The sale amount is also added to it's respective department's total sales.
+In the customer portion, users are presented with a list of items that they can purchase. After being prompted for the #Id and the quantity of the product, they are given the order total and the appropriate amount is subtracted from the database. The sale amount is then added to total sales for the executive to view.
 
 <h4>Manager</h4>
 
-In the manager app the user is presented with 4 options:
+In the manager portion, the user is presented with 4 options:
 
 * View Products for Sale
 Displays a list of all products for sale.
@@ -29,21 +28,27 @@ Allows the user to add more inventory to an already existing item.
 * Add New Product
 Allows the user to add a completely new product to the database.
 
+* Delete a Product
+Allows the user delete an existing product by product #Id
+
 <h4>Executive</h4>
 
-In the executive app the user is presented with 2 options:
+In the executive portion, the user is presented with 2 options:
 
 * View Product Sales by Department
-Allows the user to slect a department by ID and displays all relevant information about that department's sales.
+Allows the user to select a department by ID and displays all relevant information about that department's sales.
 
 * Create New Department
 Allows the user to add a new department to the database after inputting all required information.
+
+* Delete an Existing Department
+Allows the user to delete an existing department.
 
 ## Technologies Used:
 
 * JavaScript
 * Node.js
-* MYSQL
+* mySQL
 * NPM(Node Packages Manager)
 	* mysql
 	* inquirer
@@ -51,5 +56,5 @@ Allows the user to add a new department to the database after inputting all requ
 	* chalk
 
 #### Demo
-Youtube link for demo: https://www.youtube.com/watch?v=LvyQP9uEfIs&feature=youtu.be 
+Youtube link for demo: https://www.youtube.com/watch?v=UGl5-oeRuxg&feature=youtu.be
 
