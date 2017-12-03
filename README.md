@@ -55,6 +55,7 @@ Allows the user to delete an existing department.
 	* easy-table
 	* chalk
 
-#### Demo
-Youtube link for demo: https://www.youtube.com/watch?v=UGl5-oeRuxg&feature=youtu.be
+#### Youtube link for demo: 
+[![Image not available](http://img.youtube.com/vi/UGl5-oeRuxg/0.jpg)](https://www.youtube.com/watch?v=UGl5-oeRuxg&feature=youtu.be)
+
 
